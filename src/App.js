@@ -357,17 +357,18 @@ function App() {
           <div className="text-white mx-1 px-1">
             <h1>Normal</h1>
 
-            <Button
-              style={{ margin: '5px' }}
-              className="p-button p-button-rounded p-button-primary"
-              icon="pi pi-minus"
-              onClick={decrementSenha}
-            />
+
             <Button
               style={{ margin: '5px' }}
               className="p-button p-button-rounded p-button-success "
               icon="pi pi-plus"
               onClick={incrementSenha}
+            />
+            <Button
+              style={{ margin: '5px' }}
+              className="p-button p-button-rounded p-button-primary"
+              icon="pi pi-minus"
+              onClick={decrementSenha}
             />
           </div>
 
@@ -380,17 +381,18 @@ function App() {
           <div className="text-white mx-1 px-1">
             <h1>Prioridade</h1>
 
-            <Button
-              style={{ margin: '5px' }}
-              className="p-button p-button-rounded p-button-primary "
-              icon="pi pi-minus"
-              onClick={decrementSenhaPrioridade}
-            />
+
             <Button
               style={{ margin: '5px' }}
               className="p-button p-button-rounded p-button-success "
               icon="pi pi-plus"
               onClick={incrementSenhaPrioridade}
+            />
+            <Button
+              style={{ margin: '5px' }}
+              className="p-button p-button-rounded p-button-primary "
+              icon="pi pi-minus"
+              onClick={decrementSenhaPrioridade}
             />
           </div>
 
