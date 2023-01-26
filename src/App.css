@@ -7,6 +7,8 @@ body {
     @apply w-full bg-red-500
 }
 
+
+
 .rs-play {
     background-color: green !important;
     color: #fff;
@@ -20,7 +22,7 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
-    margin-top: 1rem;
+    margin-top: 2px;
     width: 100%;
 
 
@@ -29,56 +31,42 @@ body {
 
 .bigHeading {
     display: block;
-    position: absolute;
+    position: fixed;
+    bottom: 9%;
     font-style: italic;
-    font-size: 40px;
+
+    font-size: 30px;
     background: #e60000;
     color: #FFFF;
     text-transform: uppercase;
-    padding: 9px;
+    padding: 8px;
     letter-spacing: 3px;
     font-weight: 700;
     z-index: 2;
 }
 
-.bigHeading::after,
-.bigHeading::before {
-    content: '';
-    width: 0;
-    position: absolute;
-    border-width: 78px;
-    border-style: solid;
-    top: 0;
-    z-index: -1;
-}
 
-.bigHeading::before {
 
-    border-color: #e60000 transparent transparent transparent;
-    right: -78px;
-}
 
-.bigHeading::after {
 
-    border-color: transparent transparent #e60000 transparent;
-    left: -78px;
-    top: -78px;
-}
 
 .text-update {
-    height: 75px;
+    height: 10%;
     background: #004fff;
     overflow: hidden;
-    position: relative;
+    position: fixed;
+    bottom: 1px;
     margin-top: 1px;
+
+    padding: 1%;
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 500;
     display: flex;
-    width: 99%;
-    align-items: center;
+    width: 100%;
+
 
     left: 12px;
 }
@@ -102,4 +90,26 @@ body {
     100% {
         transform: translateX(-100%);
     }
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+    scrollbar-width: none;
+    scrollbar-color: #db1f1f #f8f7f7;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f8f7f7;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #db1f1f;
+    border-radius: 9px;
+    border: 1px ridge #ffffff;
 }
