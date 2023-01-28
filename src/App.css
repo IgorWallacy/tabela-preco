@@ -32,7 +32,7 @@ body {
 .bigHeading {
     display: block;
     position: fixed;
-    bottom: 9%;
+    bottom: 5%;
     font-style: italic;
 
     font-size: 30px;
@@ -51,7 +51,7 @@ body {
 
 
 .text-update {
-    height: 10%;
+    height: 5%;
     background: #004fff;
     overflow: hidden;
     position: fixed;
@@ -73,18 +73,18 @@ body {
 
 .text-update p {
     position: absolute;
-    width: 200%;
+    width: 101%;
     margin: 0;
     font-weight: 700;
     text-align: left;
     transform: translateX(100%);
-    animation: moving 40s linear infinite;
+    animation: moving 45s linear infinite;
 }
 
 @keyframes moving {
     0% {
 
-        transform: translateX(100%);
+        transform: translateX(90%);
     }
 
     100% {

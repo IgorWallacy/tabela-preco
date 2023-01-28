@@ -2,12 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Toast } from 'primereact/toast';
-
+import { Toast } from "primereact/toast";
 
 import "./App.css";
 
-import Logo from "./assets/img/logo.png";
+import Logo from "C:/TabelaPrecos/imagens/logo.png";
 
 import api from "./services/axios";
 
@@ -19,16 +18,16 @@ import Speech from "react-speech";
 
 import Configuracao from "./components/tabela/configuracao";
 
-function App() {
+import moment from "moment/moment";
 
+function App() {
   const toast = useRef(null);
 
+  const [configTabela, setConfigTabela] = useState(
+    JSON.parse(localStorage.getItem("tabela"))
+  );
 
-  const [configTabela, setConfigTabela] = useState(JSON.parse(localStorage.getItem("tabela")));
-
-  const [tabela, setTabela] = useState([""]);
-
-  const [trocaSegundos, setTrocaSegundos] = useState([]);
+  const [ultimaAtualizacao, setUltimaAtualizacao] = useState();
 
   const [senhaTelaCheia, setSenhaTelaCheia] = useState(false);
   const [senhaPrioridadeTelaCheia, setSenhaPrioridadeTelaCheia] =
@@ -44,16 +43,12 @@ function App() {
 
   const [displayConfig, setDisplayConfig] = useState(false);
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   const [page, setPage] = useState(1);
   const [linha, setLinha] = useState(1);
 
-
-
-
-
-  const rowsPerPage = 15 // number of rows to display per page
+  const [rowsPerPage, setRowsPerPage] = useState(10); // number of rows to display per page
   //const data = [/* your data */];
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
@@ -89,38 +84,55 @@ function App() {
     return setSenhaPrioridade(senhaPrioridade + 1);
   };
 
-  const tabelaConfig = () => {
+  const getProdutos = () => {
+    setRowsPerPage(configTabela?.loja?.numprodutosporpagina);
     return api
-      .get(`/api_public/tabelapreco/configuracao/`)
+      .get(
+        `/api_public/tabelapreco/display/${configTabela?.tabela?.id}/${configTabela?.loja?.idfilial}`
+      )
       .then((r) => {
-        setTabela(r.data);
-
-
+        setUltimaAtualizacao(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"));
+        setData(r.data);
+        //   console.log(r.data);
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch((error) => {});
   };
 
-
-
-
-
-  const getProdutos = () => {
-
-
-    console.log(currentPageData)
-    return api.get(`/api_public/tabelapreco/display/${configTabela?.tabela?.id}/${configTabela?.loja?.idfilial}`).then((r) => {
-      toast.current.show({ severity: 'info', summary: 'Informação', detail: `Produtos atualizados` });
-      setData(r.data)
-      console.log(r.data)
-    }).catch((error) => {
-      toast.current.show({ severity: 'error', summary: 'Erro', detail: `${error.message}` });
-    })
-
-  }
-
   const getNoticias = () => {
+    var options = {
+      method: "GET",
+
+      url: "https://api.thenewsapi.com/v1/news/all?locale=br&language=pt&api_token=lUp9LnoSpCV1zvWnB0fqnSKgdNWV9NBkPeZIhGIe",
+      params: {
+        /*  keywords: ["BBB", "Flamengo", "Fluminense", "Botafogo", "Vasco"],
+        start_date: moment(new Date())
+          .subtract("days", 30)
+          .format("yyyy-MM-DD hh:mm:ss+00:00"),
+        country: "BR",
+        language: "pt",
+        // category: "politics",
+        apiKey: "nyNumK8-ymwjWFJX0o5iLRahJ0KelkbfrZReu85GxLigyEh5", */
+      },
+      /* headers: {
+        apiKey: "nyNumK8-ymwjWFJX0o5iLRahJ0KelkbfrZReu85GxLigyEh5",
+      },*/
+    };
+
+    api2
+      .request(options)
+      .then((r) => {
+        setNoticias(r.data.data);
+        // console.log(r.data.data);
+      })
+      .catch((e) => {
+        //   console.log(e);
+        /*  toast.current.show({
+          severity: "error",
+          summary: "Erro ao buscar noticias",
+          detail: `${e.message}`,
+        }); */
+      });
+    /*
     api2
       .get(
         `https://newsapi.org/v2/top-headlines?country=br&apiKey=449d30ca9a734c32bb60df79a52619ca`
@@ -129,15 +141,24 @@ function App() {
         setNoticias(response.data.articles);
       })
       .catch((error) => {
-        toast.current.show({ severity: 'error', summary: 'Erro', detail: `${error.message}` });
+        toast.current.show({
+          severity: "error",
+          summary: "Erro ao buscar noticias",
+          detail: `${error.message}`,
+        });
       });
+      */
   };
 
   useEffect(() => {
+    if (localStorage.getItem("tabela") === null) {
+      setDisplayConfig(true);
+    }
+
     setConfigTabela(JSON.parse(localStorage.getItem("tabela")));
-    tabelaConfig();
+
     getNoticias();
-    getProdutos()
+    getProdutos();
 
     const intervalId = setInterval(() => {
       setLinha((total) => {
@@ -152,9 +173,23 @@ function App() {
         }
         return prevPage + 1;
       });
-    }, 5000);
+    }, 15000);
     return () => clearInterval(intervalId);
+  }, [totalPages]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getNoticias();
+      getProdutos();
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, [totalPages]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getNoticias();
+    }, 5400000);
+    return () => clearInterval(intervalId);
   }, [totalPages]);
 
   return (
@@ -166,7 +201,7 @@ function App() {
             position: "fixed",
             right: "1%",
             top: "1%",
-            zIndex: '1'
+            zIndex: "1",
           }}
           onClick={() => setDisplayConfig(true)}
           className="p-button p-button-rounded"
@@ -175,7 +210,7 @@ function App() {
       </div>
 
       {configTabela?.habilitaSenhaPreferencial &&
-        configTabela?.habilitarSenhaNormal ? (
+      configTabela?.habilitarSenhaNormal ? (
         <></>
       ) : (
         <>
@@ -188,11 +223,8 @@ function App() {
       )}
 
       <div className="flex flex-row">
-
-
         <div className="w-72 flex flex-col justify-center items-center">
-
-
+          <h3 className="text-white"> Última carga {ultimaAtualizacao}</h3>
           <img style={{ width: "200px" }} src={Logo} />
           <div className="flex flex-col justify-center items-center">
             {configTabela?.habilitarSenhaNormal ? (
@@ -250,7 +282,9 @@ function App() {
             )}
           </div>
         </div>
-        <div style={{ width: "80%", position: 'fixed', top: '1%', left: '20%' }}>
+        <div
+          style={{ width: "80%", position: "fixed", top: "1%", left: "20%" }}
+        >
           <table className="min-w-full  border-separate border-spacing-1">
             <thead>
               <tr className="bg-yellow-600">
@@ -266,20 +300,47 @@ function App() {
               </tr>
             </thead>
             <tbody>
-
               {currentPageData.map((row, index) => (
                 <tr className="even:bg-blue-500 odd:bg-red-500 h-8" key={index}>
                   <td className=" text-white border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl ">
                     {row.codigo}
                   </td>
                   <td className=" text-white border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
-                    {row.produto}
+                    {row.precopromocao || row.precopromocaofamilia ? (
+                      <>
+                        <div className=" flex justify-between animate__animated animate__flash ">
+                          {row.produto}
+                          <h4 className="text-center text-2xl text-red-500 bg-yellow-300 font-bold rounded-full 	 p-1">
+                            PROMOCÃO
+                          </h4>
+                        </div>
+                      </>
+                    ) : (
+                      <>{row.produto}</>
+                    )}
                   </td>
+
                   <td className="text-yellow-50 border-spacing-8 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(row.preco)}
+                    {row.precopromocaofamilia || row.precopromocao ? (
+                      <>
+                        {row.precopromocaofamilia
+                          ? new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(row.precopromocaofamilia)
+                          : new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(row.precopromocao)}
+                      </>
+                    ) : (
+                      <>
+                        {new Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        }).format(row.preco)}
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -287,25 +348,28 @@ function App() {
           </table>
         </div>
       </div>
-      <div className="w-full">
-        <div className="ticker-wrapper">
-          <div className="bigHeading"> Notícias </div>
+      {currentPageDataNews.length > 0 ? (
+        <>
+          <div className="w-full">
+            <div className="ticker-wrapper">
+              <div className="bigHeading"> Notícias </div>
 
-          <div className=" flex  items-center justify-evenly  text-update">
-            <div className="">
-              {currentPageDataNews.map((m, i) => (
-                <h1 key={i}>{m?.title}</h1>
-              ))}
+              <div className=" flex  items-center justify-evenly  text-update">
+                <div className="">
+                  {currentPageDataNews.map((m, i) => (
+                    <h1 key={i}>
+                      {m.source} - {m?.title}
+                    </h1>
+                  ))}
+                </div>
+              </div>
             </div>
-            {/*<div className="mt-1">
-              {currentPageDataNews.map((m, i) => (
-                <p key={i}>{` ${m?.description}`} </p>
-              ))}
-            </div>
-              */}
           </div>
-        </div>
-      </div>
+        </>
+      ) : (
+        <></>
+      )}
+
       <Dialog
         draggable={false}
         position="bottom-right"
@@ -317,10 +381,10 @@ function App() {
         onHide={() => setSenhaTelaCheia(false)}
       >
         <div className="flex justify-center items-center gap-1">
-          <h1 className="text-9xl animate__animated animate__pulse animate__infinite">
+          <h1 className="text-8xl animate__animated animate__pulse animate__infinite">
             SENHA {senha}
           </h1>
-          <h2 className="text-5xl">
+          <h2 className="text-5xl m-2">
             <Speech
               className="rs-play"
               lang="pt-BR"
@@ -351,7 +415,7 @@ function App() {
       >
         <div className="flex justify-center items-center gap-5">
           <h1 className="text-7xl animate__animated animate__pulse animate__infinite">
-            PREFERENCIAL {senhaPrioridade}
+            SENHA PREFERENCIAL {senhaPrioridade}
           </h1>
           <h2 className="text-5xl">
             <Speech
