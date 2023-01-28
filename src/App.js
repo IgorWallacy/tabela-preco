@@ -102,7 +102,7 @@ function App() {
     var options = {
       method: "GET",
 
-      url: "https://api.thenewsapi.com/v1/news/all?locale=br&language=pt&api_token=lUp9LnoSpCV1zvWnB0fqnSKgdNWV9NBkPeZIhGIe",
+      url: "https://newsapi.org/v2/top-headlines?sources=google-news-br&apiKey=449d30ca9a734c32bb60df79a52619ca",
       params: {
         /*  keywords: ["BBB", "Flamengo", "Fluminense", "Botafogo", "Vasco"],
         start_date: moment(new Date())
@@ -121,7 +121,7 @@ function App() {
     api2
       .request(options)
       .then((r) => {
-        setNoticias(r.data.data);
+        setNoticias(r.data.articles);
         // console.log(r.data.data);
       })
       .catch((e) => {
@@ -357,9 +357,7 @@ function App() {
               <div className=" flex  items-center justify-evenly  text-update">
                 <div className="">
                   {currentPageDataNews.map((m, i) => (
-                    <h1 key={i}>
-                      {m.source} - {m?.title}
-                    </h1>
+                    <h1 key={i}>{m?.title}</h1>
                   ))}
                 </div>
               </div>
