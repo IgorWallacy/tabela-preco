@@ -3,11 +3,11 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+
 body {
-    @apply w-full bg-red-500
+
+    @apply bg-red-500
 }
-
-
 
 .rs-play {
     background-color: green !important;
