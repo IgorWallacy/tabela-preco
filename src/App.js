@@ -14,7 +14,7 @@ import api2 from "./services/axiosXmlNews";
 
 import "animate.css";
 
-import Speech from "react-speech";
+import { useSpeechSynthesis } from "react-speech-kit";
 
 import Configuracao from "./components/tabela/configuracao";
 
@@ -23,6 +23,7 @@ import moment from "moment/moment";
 function App() {
   const toast = useRef(null);
 
+  const { speak, voices } = useSpeechSynthesis();
   const [configTabela, setConfigTabela] = useState(
     JSON.parse(localStorage.getItem("tabela"))
   );
@@ -35,8 +36,6 @@ function App() {
 
   const [senha, setSenha] = useState(0);
   const [senhaPrioridade, setSenhaPrioridade] = useState(0);
-
-  const [ultimaSenha, setUltimaSenha] = useState(false);
 
   const [noticias, setNoticias] = useState([]);
   const [totalNoticias, setTotalNoticias] = useState(20);
@@ -63,13 +62,16 @@ function App() {
   const currentPageDataNews = noticias.slice(startIndexN, endIndexN);
 
   const incrementSenha = () => {
+    if (senhaTelaCheia === true) {
+      setTimeout(() => {
+        setSenhaTelaCheia(false);
+      }, 60000);
+    }
     setSenhaTelaCheia(true);
-    setUltimaSenha(true);
-
-    setTimeout(() => {
-      setSenhaTelaCheia(false);
-    }, 40000);
-
+    speak({
+      text: `Atenção cliente amigo, senha número ${senha + 1}`,
+      voice: voices[0],
+    });
     return setSenha(senha + 1);
   };
 
@@ -82,9 +84,18 @@ function App() {
   };
 
   const incrementSenhaPrioridade = () => {
+    if (senhaPrioridadeTelaCheia === true) {
+      setTimeout(() => {
+        setSenhaTelaCheia(false);
+      }, 60000);
+    }
     setSenhaPrioridadeTelaCheia(true);
-    setUltimaSenha(false);
-
+    speak({
+      text: `Atenção cliente amigo, senha preferencial número ${
+        senhaPrioridade + 1
+      }`,
+      voice: voices[0],
+    });
     return setSenhaPrioridade(senhaPrioridade + 1);
   };
 
@@ -227,17 +238,19 @@ function App() {
           </>
         )}
 
-        <div className="flex flex-col justify-around   ">
-          <div className="w-72 flex flex-col  items-center justify-between gap-5">
+        <div className="flex flex-col justify-around    ">
+          <div className="w-64 h-max flex flex-col justify-evenly items-stretch gap-5  mx-1 px-1   ">
             <h3 className="text-white"> Última carga {ultimaAtualizacao}</h3>
 
-            <img style={{ width: "100%" }} src={Logo} />
+            <img style={{ width: "100%" }} src={Logo} alt="Logo" />
 
-            <div className="flex flex-col  items-center">
+            <div className="flex flex-col  items-center ">
               {configTabela?.habilitarSenhaNormal ? (
                 <>
                   <div className="text-white flex flex-row justify-start items-start">
-                    <h1>Normal</h1>
+                    <div>
+                      <h1>Normal</h1>
+                    </div>
 
                     <Button
                       style={{ margin: "5px" }}
@@ -313,28 +326,32 @@ function App() {
               <tbody>
                 {currentPageData.map((row, index) => (
                   <tr
-                    className="even:bg-blue-500 odd:bg-opacity-75 h-8"
+                    className="  even:bg-transparent odd:bg-blue-500 h-8"
                     key={index}
                   >
-                    <td className=" text-gray-100 border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl ">
+                    <td className="  text-white border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl  ">
                       {row.codigo}
                     </td>
-                    <td className=" text-gray-100 border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
+                    <td className=" text-white border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
                       {row.precopromocao || row.precopromocaofamilia ? (
                         <>
-                          <div className=" flex justify-between animate__animated animate__flash ">
+                          <div className="flex justify-between animate__animated animate__flash  p-1 my-1 ">
                             {row.produto}
-                            <h4 className="text-center text-2xl text-red-500 bg-yellow-300 font-bold rounded-full 	 p-1">
-                              PROMOCÃO
+                            <h4 className="text-center text-2xl text-red-500 bg-yellow-300 font-bold rounded-full p-1 my-1">
+                              PROMOÇÃO
                             </h4>
                           </div>
                         </>
                       ) : (
-                        <>{row.produto}</>
+                        <>
+                          <div className="flex justify-between p-1 my-1 ">
+                            {row.produto}
+                          </div>
+                        </>
                       )}
                     </td>
 
-                    <td className="text-gray-100 border-spacing-8 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
+                    <td className="text-white border-spacing-10 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
                       {row.precopromocaofamilia || row.precopromocao ? (
                         <>
                           {row.precopromocaofamilia
@@ -397,13 +414,16 @@ function App() {
               SENHA {senha}
             </h1>
             <h2 className="text-5xl m-2">
-              <Speech
-                className="rs-play"
-                lang="pt-BR"
-                textAsButton
-                displayText="Chamar"
-                resume
-                text={`Atenção cliente amigo, senha ${senha}`}
+              <Button
+                className="p-button p-button-rounded p-button-success p-button-lg"
+                icon="pi pi-play"
+                label="Chamar"
+                onClick={() =>
+                  speak({
+                    text: `Atenção senha número ${senha}`,
+                    voice: voices[0],
+                  })
+                }
               />
             </h2>
             <Button
@@ -430,13 +450,16 @@ function App() {
               SENHA PREFERENCIAL {senhaPrioridade}
             </h1>
             <h2 className="text-5xl">
-              <Speech
-                className="rs-play"
-                lang="pt-BR"
-                textAsButton
-                displayText="Chamar"
-                resume
-                text={`Atenção senha preferencial ${senhaPrioridade}`}
+              <Button
+                className="p-button p-button-rounded p-button-success p-button-lg"
+                icon="pi pi-play"
+                label="Chamar"
+                onClick={() =>
+                  speak({
+                    text: `Atenção senha preferencial número ${senhaPrioridade}`,
+                    voice: voices[0],
+                  })
+                }
               />
             </h2>
             <Button
