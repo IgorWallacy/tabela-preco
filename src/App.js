@@ -62,11 +62,10 @@ function App() {
   const currentPageDataNews = noticias.slice(startIndexN, endIndexN);
 
   const incrementSenha = () => {
-    if (senhaTelaCheia === true) {
-      setTimeout(() => {
-        setSenhaTelaCheia(false);
-      }, 60000);
-    }
+    setTimeout(() => {
+      setSenhaTelaCheia(false);
+    }, 15000);
+
     setSenhaTelaCheia(true);
     speak({
       text: `Atenção cliente amigo, senha número ${senha + 1}`,
@@ -84,11 +83,10 @@ function App() {
   };
 
   const incrementSenhaPrioridade = () => {
-    if (senhaPrioridadeTelaCheia === true) {
-      setTimeout(() => {
-        setSenhaTelaCheia(false);
-      }, 60000);
-    }
+    setTimeout(() => {
+      setSenhaPrioridadeTelaCheia(false);
+    }, 15000);
+
     setSenhaPrioridadeTelaCheia(true);
     speak({
       text: `Atenção cliente amigo, senha preferencial número ${
@@ -215,12 +213,12 @@ function App() {
           <Button
             style={{
               position: "fixed",
-              right: "1%",
-              top: "1%",
-              zIndex: "1",
+              left: "1px",
+              bottom: "1px",
+              zIndex: "3",
             }}
             onClick={() => setDisplayConfig(true)}
-            className="p-button p-button-rounded"
+            className="p-button p-button-sm p-button-secondary"
             icon="pi pi-cog"
           />
         </div>
@@ -254,22 +252,32 @@ function App() {
 
                     <Button
                       style={{ margin: "5px" }}
-                      className="p-button p-button-rounded p-button-success "
-                      icon="pi pi-plus"
-                      onClick={incrementSenha}
-                    />
-                    <Button
-                      style={{ margin: "5px" }}
                       className="p-button p-button-rounded p-button-primary"
                       icon="pi pi-minus"
                       onClick={decrementSenha}
                     />
+                    <Button
+                      style={{ margin: "5px" }}
+                      className="p-button p-button-rounded p-button-success "
+                      icon="pi pi-plus"
+                      onClick={incrementSenha}
+                    />
                   </div>
-
-                  <h2 className="text-4xl text-start text-white">SENHA</h2>
-                  <h1 className=" text-8xl font-semibold text-white">
-                    {senha}
-                  </h1>
+                  <div
+                    onClick={() => incrementSenha()}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {" "}
+                    <h2 className="text-4xl text-start text-white">SENHA</h2>
+                    <h1 className=" text-8xl font-semibold text-white">
+                      {senha}
+                    </h1>
+                  </div>
                 </>
               ) : (
                 <></>
@@ -282,24 +290,33 @@ function App() {
 
                     <Button
                       style={{ margin: "5px" }}
-                      className="p-button p-button-rounded p-button-success "
-                      icon="pi pi-plus"
-                      onClick={incrementSenhaPrioridade}
-                    />
-                    <Button
-                      style={{ margin: "5px" }}
                       className="p-button p-button-rounded p-button-primary "
                       icon="pi pi-minus"
                       onClick={decrementSenhaPrioridade}
                     />
+                    <Button
+                      style={{ margin: "5px" }}
+                      className="p-button p-button-rounded p-button-success "
+                      icon="pi pi-plus"
+                      onClick={incrementSenhaPrioridade}
+                    />
                   </div>
-
-                  <h2 className="text-4xl text-start text-white">
-                    PREFERENCIAL
-                  </h2>
-                  <h1 className=" text-8xl font-semibold text-white">
-                    {senhaPrioridade}
-                  </h1>
+                  <div
+                    onClick={() => incrementSenhaPrioridade()}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <h2 className="text-4xl text-start text-white">
+                      PREFERENCIAL
+                    </h2>
+                    <h1 className=" text-8xl font-semibold text-white">
+                      {senhaPrioridade}
+                    </h1>
+                  </div>
                 </>
               ) : (
                 <></>
@@ -329,10 +346,10 @@ function App() {
                     className="  even:bg-transparent odd:bg-blue-500 h-8"
                     key={index}
                   >
-                    <td className="  text-white border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl  ">
+                    <td className="  text-gray-100 border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl  ">
                       {row.codigo}
                     </td>
-                    <td className=" text-white border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
+                    <td className=" text-gray-100 border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
                       {row.precopromocao || row.precopromocaofamilia ? (
                         <>
                           <div className="flex justify-between animate__animated animate__flash  p-1 my-1 ">
@@ -351,7 +368,7 @@ function App() {
                       )}
                     </td>
 
-                    <td className="text-white border-spacing-10 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
+                    <td className="text-gray-100 border-spacing-10 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
                       {row.precopromocaofamilia || row.precopromocao ? (
                         <>
                           {row.precopromocaofamilia
@@ -400,18 +417,33 @@ function App() {
         )}
 
         <Dialog
+          style={{ height: "100vw", width: "55vh" }}
           draggable={false}
-          position="bottom-right"
-          className="text-5xl text-center "
+          position="top-left"
+          className="text-5xl text-center  "
           header="Atenção cliente amigo"
           visible={senhaTelaCheia}
           modal={false}
-          style={{ width: "100%" }}
           onHide={() => setSenhaTelaCheia(false)}
         >
-          <div className="flex justify-center items-center gap-1">
+          <div className="flex flex-col justify-center items-center gap-5 ">
+            <div className="flex flex-row gap-5">
+              <Button
+                className="p-button p-button-rounded p-button-danger"
+                icon="pi pi-minus"
+                onClick={() => setSenha(senha - 1)}
+              />
+              <Button
+                className="p-button p-button-rounded p-button-success"
+                icon="pi pi-plus"
+                onClick={() => setSenha(senha + 1)}
+              />
+            </div>
+            <h4 className="text-4xl animate__animated animate__pulse animate__infinite">
+              SENHA
+            </h4>
             <h1 className="text-8xl animate__animated animate__pulse animate__infinite">
-              SENHA {senha}
+              {senha}
             </h1>
             <h2 className="text-5xl m-2">
               <Button
@@ -426,28 +458,44 @@ function App() {
                 }
               />
             </h2>
+            {/*
             <Button
               icon="pi pi-times"
               label="Fechar"
               onClick={() => setSenhaTelaCheia(false)}
               className="p-button p-button-rounded p-button-danger p-button-lg"
-            />
+              /> */}
           </div>
         </Dialog>
 
         <Dialog
+          style={{ height: "100vw", width: "50vh" }}
           draggable={false}
-          position="bottom-left"
-          className="text-9xl text-center "
+          position="top-left"
+          className="text-5xl text-center "
           header="Atenção cliente amigo, Prioridade "
           visible={senhaPrioridadeTelaCheia}
           modal={false}
-          style={{ width: "100%" }}
           onHide={() => setSenhaPrioridadeTelaCheia(false)}
         >
-          <div className="flex justify-center items-center gap-5">
-            <h1 className="text-7xl animate__animated animate__pulse animate__infinite">
-              SENHA PREFERENCIAL {senhaPrioridade}
+          <div className="flex flex-col justify-center items-center gap-5">
+            <div className="flex flex-row gap-5">
+              <Button
+                className="p-button p-button-rounded p-button-danger"
+                icon="pi pi-minus"
+                onClick={() => setSenhaPrioridade(senhaPrioridade - 1)}
+              />
+              <Button
+                className="p-button p-button-rounded p-button-success"
+                icon="pi pi-plus"
+                onClick={() => setSenhaPrioridade(senhaPrioridade + 1)}
+              />
+            </div>
+            <h4 className="text-4xl animate__animated animate__pulse animate__infinite">
+              SENHA PREFERENCIAL
+            </h4>
+            <h1 className="text-8xl animate__animated animate__pulse animate__infinite">
+              {senhaPrioridade}
             </h1>
             <h2 className="text-5xl">
               <Button
@@ -462,11 +510,12 @@ function App() {
                 }
               />
             </h2>
+            {/*
             <Button
               label="Fechar"
               onClick={() => setSenhaPrioridadeTelaCheia(false)}
               className="p-button p-button-rounded p-button-danger p-button-lg"
-            />
+              /> */}
           </div>
         </Dialog>
 
