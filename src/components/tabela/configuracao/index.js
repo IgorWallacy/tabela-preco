@@ -53,6 +53,7 @@ const Configuracao = () => {
 
   const getTabelas = () => {
     return api.get("/api_public/tabelapreco/todas").then((r) => {
+     
       setTabela(r.data);
     });
   };
@@ -82,7 +83,7 @@ const Configuracao = () => {
             value={tabelaSelecionada}
             options={tabela}
             onChange={(e) => setTabelaSelecionada(e.value)}
-            optionLabel="descricao"
+            optionLabel="nome"
             placeholder="Selecione uma tabela"
           />
         </div>

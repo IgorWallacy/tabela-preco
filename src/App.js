@@ -230,7 +230,7 @@ function App() {
           <>
             <div className="w-1 h-15">
               <h1 className="text-4xl m-2  text-yellow-100 font-Pacifico">
-                {configTabela?.tabela?.descricao}
+                {configTabela?.tabela?.descricao? configTabela?.tabela?.descricao : configTabela?.tabela?.nome }
               </h1>
             </div>
           </>
@@ -343,18 +343,18 @@ function App() {
               <tbody>
                 {currentPageData.map((row, index) => (
                   <tr
-                    className="  even:bg-transparent odd:bg-blue-500 h-8"
+                    className="  even:bg-gray-200 odd:bg-yellow-300 h-8"
                     key={index}
                   >
-                    <td className="  text-gray-100 border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl  ">
-                      {row.codigo}
+                    <td className="  text-black border-spacing-8 border border-slate-700 text-center  font-semibold text-3xl  ">
+                      {row?.ean ? row?.ean : row?.codigo}
                     </td>
-                    <td className=" text-gray-100 border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
+                    <td className=" text-black border-spacing-8 border border-slate-700 text-start  font-semibold text-3xl ">
                       {row.precopromocao || row.precopromocaofamilia ? (
                         <>
                           <div className="flex justify-between animate__animated animate__flash  p-1 my-1 ">
                             {row.produto}
-                            <h4 className="text-center text-2xl text-red-500 bg-yellow-300 font-bold rounded-full p-1 my-1">
+                            <h4 className="text-center text-2xl text-red-500 bg-yellow-400 font-bold rounded-full p-2 my-1">
                               PROMOÇÃO
                             </h4>
                           </div>
@@ -368,7 +368,7 @@ function App() {
                       )}
                     </td>
 
-                    <td className="text-gray-100 border-spacing-10 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
+                    <td className="text-black border-spacing-10 border border-slate-700 text-center text-opacity-100  font-semibold text-4xl">
                       {row.precopromocaofamilia || row.precopromocao ? (
                         <>
                           {row.precopromocaofamilia
@@ -442,7 +442,7 @@ function App() {
             <h4 className="text-4xl animate__animated animate__pulse animate__infinite">
               SENHA
             </h4>
-            <h1 className="text-8xl animate__animated animate__pulse animate__infinite">
+            <h1 className="text-9xl animate__animated animate__pulse animate__infinite">
               {senha}
             </h1>
             <h2 className="text-5xl m-2">
@@ -494,7 +494,7 @@ function App() {
             <h4 className="text-4xl animate__animated animate__pulse animate__infinite">
               SENHA PREFERENCIAL
             </h4>
-            <h1 className="text-8xl animate__animated animate__pulse animate__infinite">
+            <h1 className="text-9xl animate__animated animate__pulse animate__infinite">
               {senhaPrioridade}
             </h1>
             <h2 className="text-5xl">
